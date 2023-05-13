@@ -1,4 +1,4 @@
-# Dictionariez
+# Vpocket
 
 A browser extension that helps you look up words in multiple dictionaries. With only one click, you can quickly find the definition, translation, and pronunciation of any word on any webpage, and also export the words you've looked up to **Anki**.
 
