@@ -1,0 +1,118 @@
+body {
+  position: relative;
+
+  .nav-wrapper {
+    @media screen and (max-width: 768px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nav {
+      position: fixed;
+      top: 20px;
+
+      @media screen and (max-width: 768px) {
+        bottom: 20px;
+        top: auto;
+        z-index: 9999;
+        background-color: gainsboro;
+
+        &.nav-stacked > li {
+          float: left;
+        }
+      }
+    }
+  }
+
+  .indent {
+    margin-left: 20px;
+  }
+  .ellipsis {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ascii-title {
+    border: none;
+    background-color: initial;
+    margin: 0;
+    padding: 0;
+  }
+  .text-new {
+    color: red;
+  }
+
+  .link-github {
+    i {
+      vertical-align: middle;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .dataTables_info {
+      display: none;
+    }
+  }
+
+  #table-history {
+    .starrr {
+      .fa {
+        color: orange;
+      }
+    }
+    .dictionaries-history-word {
+      max-width: 130px;
+    }
+    .w-sentence {
+      max-width: 300px;
+    }
+    .link-s {
+      max-width: 150px;
+    }
+  }
+
+  #dictionary {
+    table.dataTable {
+      td.reorder {
+        text-align: left;
+      }
+    }
+  }
+
+  #shortcut-setting {
+    margin-bottom: 500px;
+  }
+
+  .container {
+    position: relative;
+
+    .buymeacoffee {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      img {
+        height: 50px;
+
+        @media screen and (max-width: 768px) {
+          height: 25px;
+        }
+      }
+    }
+  }
+
+  .function-setting {
+    .choose-mark-color {
+      margin-bottom: 20px;
+
+      color-picker {
+        position: absolute;
+        input {
+          width: 150px;
+        }
+      }
+    }
+  }
+}

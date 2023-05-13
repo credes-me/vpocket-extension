@@ -1,0 +1,10 @@
+node_modules
+bower_components
+build
+secrets.*.js
+*.log
+
+dictionaries.zip
+dictionaries-src.zip
+
+.DS_Store

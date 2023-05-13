@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="fairyDictApp">
+	<head>
+		<meta charset="UTF-8" />
+		<style>
+			img.pull-left {
+				width: 100px;
+				margin-right: 30px;
+			}
+
+			#specialKeys-1 {
+				margin-left: 40px;
+			}
+		</style>
+		<title>Dictionariez Options</title>
+	</head>
+
+	<body data-spy="scroll" data-target=".nav-wrapper" style="display: none">
+		<div class="container" ng-controller="optionCtrl">
+			<div class="row">
+				<div class="nav-wrapper col-md-2">
+					<ul class="nav nav-pills nav-stacked">
+						<li role="presentation" class="active">
+							<a href="#history">History</a>
+						</li>
+						<li role="presentation" class="">
+							<a href="#dictionary">Dictionaries</a>
+						</li>
+						<li role="presentation" class="">
+							<a href="#function-setting">Settings</a>
+						</li>
+						<li role="presentation" class="">
+							<a href="#shortcut-setting">Hotkeys</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-md-10 col-xs-12">
+					<div id="home" class="section">
+						<h1 class="">
+							<!-- http://patorjk.com/software/taag/#p=display&h=1&v=1&f=Swan&t=Dictionariez -->
+							<pre class="ascii-title">
+\\     // ||""\\  //""\\   //""\\ || //  ||""""' """||""""
+ \\   //  ||__// ||    || ||      ||//   ||____     ||
+  \\_//   ||     ||    || ||      ||\\   ||         ||
+   \_/    ||      \\__//   \\__// || \\  ||____     ||
+							</pre>
+						</h1>
+						<p>One app to rule them all. <a href="https://github.com/pnlpal/dictionariez/blob/master/CHANGELOG.md"
+							target="_blank"
+							class="badge">
+							v{{version}}</a></p>
+						<p>
+							Star it on
+							<a
+								href="https://github.com/pnlpal/dictionariez"
+								target="_blank"
+								class="link-github"
+								><i
+									class="fa fa-github fa-2x"
+									title="Bla Bla, it's Open Source."
+								></i></a
+							> and 
+							<button class="btn btn-default btn-sm need-share-button"
+					data-share-url="https://github.com/pnlpal/dictionariez"
+					data-share-title="Vpocket is a simple browser extension to help you break down language barriers"
+					data-share-networks="Twitter,Pinterest,Facebook,Reddit,Linkedin,Tumblr,mailto,Evernote,Wechat,Douban"
+					>share</button>, it really helps!
+						</p>
+						<p>Let's learn programming and languages together, follow on:
+							<a class="text-danger" target="_blank" href="https://pnlpal.dev/topic/2/"> 
+								pnlpal.dev,
+							</a>
+							<a class="text-muted" target="_blank" href="https://discord.gg/sazRac4kSa">
+								Discord
+							</a> 
+						</p>
+					</div>
+
+					<div id="history" class="section">
+						<h1>History</h1>
+						<table ng-if="!setting.disableWordHistory"
+							id="table-history"
+							class="table table-condensed table-bordered111"
+							style="width: 100%"
+						></table>
+						<p ng-if="setting.disableWordHistory">Word history is disabled!</p>
+					</div>
+
+					<div id="dictionary" class="section">
+						<h1>Dictionaries</h1>
+						<p class="text-muted">
+							Tip: Hold the Ctrl key when you click on the dict name can open multiple dictionaries.
+						</p>
+						<table
+							id="table-dictionary"
+							class="table table-condensed table-bordered111"
+							style="width: 100%"
+						></table>
+					</div>
+
+					<div id="function-setting" class="section function-setting">
+						<h1>Settings</h1>
+
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.markWords"
+									ng-click="changeKey(!setting.markWords, 'markWords')"
+								/>
+								Highlight your selected words in yellow (not permanent, gone after page refresh)
+							</label>
+						</div>
+						<div class="checkbox indent">
+							<label class="choose-mark-color">
+								Choose highlight color: &nbsp;
+								<color-picker 
+									event-api="markColorEvent"
+									ng-model="setting.markColor"></color-picker>
+							</label>
+							<br>
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableMarkWordsSK1"
+									ng-click="changeKey(!setting.enableMarkWordsSK1, 'enableMarkWordsSK1')"
+								/>
+								Only when using the hotkey:
+							</label>
+
+							<div class="btn-group" uib-dropdown uib-keyboard-nav>
+								<button
+									uib-dropdown-toggle
+									class="form-control btn dropdown-toggle btn-default"
+									type="button"
+									id="btn-markWordsSK1"
+								>
+									{{ setting.markWordsSK1 }}
+									<span class="caret"></span>
+								</button>
+
+								<ul
+									uib-dropdown-menu
+									class="dropdown-menu"
+									role="menu"
+									aria-labelledby="btn-markWordsSK1"
+								>
+									<li role="menuitem" ng-repeat="item in allSK" ng-hide="!item">
+										<a ng-click="changeKey(item, 'markWordsSK1')">{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+
+							<div class="btn-group" uib-dropdown uib-keyboard-nav>
+								<button
+									uib-dropdown-toggle
+									class="form-control btn dropdown-toggle btn-default"
+									type="button"
+									id="btn-markWordsKey"
+								>
+									{{ setting.markWordsKey }}
+									<span class="caret"></span>
+								</button>
+
+								<ul
+									uib-dropdown-menu
+									class="dropdown-menu"
+									role="menu"
+									aria-labelledby="btn-markWordsKey"
+								>
+									<li role="menuitem" ng-repeat="item in allLetters">
+										<a ng-click="changeKey(item, 'markWordsKey')">{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<br>
+
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableSelectionOnMouseMove"
+									ng-click="changeKey(!setting.enableSelectionOnMouseMove, 'enableSelectionOnMouseMove')"
+								/>
+								Automatically select the word underneath when moving mouse.
+							</label>
+						</div>
+
+						<div class="checkbox indent">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableSelectionSK1"
+									ng-click="changeKey(!setting.enableSelectionSK1, 'enableSelectionSK1')"
+								/>
+								Need to hold the key
+							</label>
+
+							<div class="btn-group" uib-dropdown uib-keyboard-nav>
+								<button
+									uib-dropdown-toggle
+									class="form-control btn dropdown-toggle btn-default"
+									type="button"
+									id="btn-selectionSK1"
+								>
+									{{ setting.selectionSK1 }}
+									<span class="caret"></span>
+								</button>
+
+								<ul
+									uib-dropdown-menu
+									class="dropdown-menu"
+									role="menu"
+									aria-labelledby="btn-selectionSK1"
+								>
+									<li role="menuitem" ng-repeat="item in allSK" ng-hide="!item">
+										<a ng-click="changeKey(item, 'selectionSK1')">{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<br />
+
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enablePlainLookup"
+									ng-click="changeKey(!setting.enablePlainLookup, 'enablePlainLookup')"
+								/>
+								Enable floating definition of seleted word, supporting multiple languages.
+							</label>
+						</div>
+						<div class="checkbox indent">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enablePlainSK1"
+									ng-click="changeKey(!setting.enablePlainSK1, 'enablePlainSK1')"
+								/>
+								Need to hold the key
+							</label>
+
+							<div class="btn-group" uib-dropdown uib-keyboard-nav>
+								<button
+									uib-dropdown-toggle
+									class="form-control btn dropdown-toggle btn-default"
+									type="button"
+									id="btn-plainSK1"
+								>
+									{{ setting.plainSK1 }}
+									<span class="caret"></span>
+								</button>
+
+								<ul
+									uib-dropdown-menu
+									class="dropdown-menu"
+									role="menu"
+									aria-labelledby="btn-plainSK1"
+								>
+									<li role="menuitem" ng-repeat="item in allSK" ng-hide="!item">
+										<a ng-click="changeKey(item, 'plainSK1')">{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="indent text-muted">
+							Some words might be used in multiple languages, for example English and Spanish have many 
+							common words, cancel one if you prefer the other.
+							
+							There is 
+							<a href="examples.html" target="_blank">an example page</a>
+							to look up different words in different languages you might be interested.
+						</div>
+						<div class="checkbox indent">
+							<div class="checkbox">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.enableLookupChinese"
+										ng-click="changeKey(!setting.enableLookupChinese, 'enableLookupChinese')"
+									/>
+									Look up <strong>Chinese</strong> words <span class="text-muted">(Japanese Kanji conflicts with Chinese, cancel Chinese if you prefer Japanese.)</span>
+								</label>
+							</div>
+	
+							<div class="checkbox" ng-repeat="lang in setting.otherSupportedLanguages">
+								<label>
+									<input
+										type="checkbox"
+										ng-checked="!setting.otherDisabledLanguages.includes(lang)"
+										ng-click="toggleOtherDisabledLanguages(lang)"
+									/>
+									Look up <strong>{{ lang }}</strong> words
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.enableLookupKorean"
+										ng-click="changeKey(!setting.enableLookupKorean, 'enableLookupKorean')"
+									/>
+									Look up <strong>Korean</strong> words
+								</label>
+							</div>
+
+							<div class="indent">
+								<label>
+									Lookup source from:
+								</label>
+
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-koreanLookupSource"
+									>
+										{{ koreanLookupSources[setting.koreanLookupSource] }}
+										<span class="caret"></span>
+									</button>
+	
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-koreanLookupSource"
+									>
+										<li role="menuitem" ng-repeat="(k, v) in koreanLookupSources">
+											<a ng-click="changeKey(k, 'koreanLookupSource')">{{ v }}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.enableLookupEnglish"
+										ng-click="changeKey(!setting.enableLookupEnglish, 'enableLookupEnglish')"
+									/>
+									Look up <strong>English</strong> words
+								</label>
+							</div>
+
+							<div class="indent">
+								<label>
+									Lookup source from:
+								</label>
+	
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-englishLookupSource"
+									>
+										{{ englishLookupSources[setting.englishLookupSource] }}
+										<span class="caret"></span>
+									</button>
+	
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-englishLookupSource"
+									>
+										<li role="menuitem" ng-repeat="(k, v) in englishLookupSources">
+											<a ng-click="changeKey(k, 'englishLookupSource')">{{ v }}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="checkbox indent">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.enableUSUKPron"
+										ng-click="changeKey(!setting.enableUSUKPron, 'enableUSUKPron')"
+									/>
+									Get the US and UK phonetic symbols
+								</label>
+							</div>
+
+							<div class="checkbox indent">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.enableRealPron"
+										ng-click="changeKey(!setting.enableRealPron, 'enableRealPron')"
+									/>
+									Get the real person pronunciations
+								</label>
+
+								<div class="checkbox indent">
+									<label>
+										<input
+											type="checkbox"
+											ng-model="setting.enableAmeAudio"
+											ng-click="changeKey(!setting.enableAmeAudio, 'enableAmeAudio')"
+										/>
+										Automatically play U.S. pronunciation.
+									</label>
+									<br />
+									<label>
+										<input
+											type="checkbox"
+											ng-model="setting.enableBreAudio"
+											ng-click="changeKey(!setting.enableBreAudio, 'enableBreAudio')"
+										/>
+										Automatically play U.K. pronunciation.
+									</label>
+								</div>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input
+										type="checkbox"
+										ng-model="setting.showOtherLang"
+										ng-click="changeKey(!setting.showOtherLang, 'showOtherLang')"
+									/>
+									Show
+								</label>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-otherLang"
+									>
+										{{ otherLangs[setting.otherLang] }}
+										<span class="caret"></span>
+									</button>
+	
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-otherLang"
+									>
+										<li role="menuitem" ng-repeat="(k, v) in otherLangs">
+											<a ng-click="changeKey(k, 'otherLang')">{{ v }}</a>
+										</li>
+									</ul>
+								</div>
+								
+								definition alongside for some languages, partially supporting English, French, German, Spanish, Korean etc.
+							</div>
+							<div class="text-muted">
+								For example, if your first language is Chinese, showing Chinese definition of an English word alongside the English definition
+								is helpful.
+							</div>
+						</div>
+						<br>
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableMinidict"
+									ng-click="changeKey(!setting.enableMinidict, 'enableMinidict')"
+								/>
+								Automatically open the popup dict window to look up the seleted word.
+							</label>
+						</div>
+
+						<div class="checkbox indent">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableMouseSK1"
+									ng-click="changeKey(!setting.enableMouseSK1, 'enableMouseSK1')"
+								/>
+								Need to hold the key
+							</label>
+
+							<div class="btn-group" uib-dropdown uib-keyboard-nav>
+								<button
+									uib-dropdown-toggle
+									class="form-control btn dropdown-toggle btn-default"
+									type="button"
+									id="btn-mouseSK1"
+								>
+									{{ setting.mouseSK1 }}
+									<span class="caret"></span>
+								</button>
+
+								<ul
+									uib-dropdown-menu
+									class="dropdown-menu"
+									role="menu"
+									aria-labelledby="btn-mouseSK1"
+								>
+									<li role="menuitem" ng-repeat="item in allSK" ng-hide="!item">
+										<a ng-click="changeKey(item, 'mouseSK1')">{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<br />
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.disableWordHistory"
+									ng-click="changeKey(!setting.disableWordHistory, 'disableWordHistory')"
+								/>
+								Disable word history!!
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.disableWikipediaCard"
+									ng-click="changeKey(!setting.disableWikipediaCard, 'disableWikipediaCard')"
+								/>
+								Disable wikipedia result on the popup dict window.
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.disableContextMenu"
+									ng-click="changeKey(!setting.disableContextMenu, 'disableContextMenu')"
+								/>
+								Disable the lookup item in context menu.
+								<span class="text-muted">(Restart the extension to take effect.)</span>
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.disableSharePnlpal"
+									ng-click="changeKey(!setting.disableSharePnlpal, 'disableSharePnlpal')"
+								/>
+								Disable the share with pals item in context menu.
+								<span class="text-muted">(Restart the extension to take effect.)</span>
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.disableYtbCaptionz"
+									ng-click="changeKey(!setting.disableYtbCaptionz, 'disableYtbCaptionz')"
+								/>
+								Disable helper of watching YouTube video on Captionz
+								<a href='https://revir.github.io/2020/12/21/Captionz-learn-on-YouTube-with-fun/' title="What is this?" class="text-muted" target="_blank">
+									<i class="fa fa-question-circle" aria-hidden="true"></i>
+								</a>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									ng-model="setting.enableReadClipboard"
+									ng-click="changeKey(!setting.enableReadClipboard, 'enableReadClipboard')"
+								/>
+								Enable reading the clipboard to get the selected word. 
+								<em ng-if="!setting.readClipboardError" class="text-new">New!</em>
+								<em>{{setting.readClipboardError}}</em>
+							</label>
+						</div>
+
+						<div>
+							<label for="excluded-websites">
+								<span>Don't run on these websites:</span> <em class="text-new">New!</em>
+							</label>
+							<br>
+							<em>
+								This extension injects a script on the webpages so that when you select a word or use the keyboard shortcut, it can
+								look up the word for you. But some websites may not be compatible with it. You can add the exceptions here. Regex is supported.
+							</em>
+							<div>
+								<textarea name="excluded-webistes" 
+									id="excluded-websites" 
+									class="form-control"
+									ng-model="setting.excludedSites" 
+									ng-change="changeKey('excludedSites')" 
+									cols="10" 
+									rows="5">
+								</textarea>
+							</div>
+						</div>
+					</div>
+
+					<br />
+
+					<div id="shortcut-setting" class="section shortcut-setting">
+						<h1>Hotkeys</h1>
+
+						<div>
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2">Open the dict: </span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-sk1"
+									>
+										{{ setting.openSK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'openSK1')">{{ item }}</a>
+										</li>
+									</ul>
+								</div>
+
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-sk2"
+									>
+										{{ setting.openSK2 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-sk2"
+									>
+										<li role="menuitem" ng-repeat="item in allSK">
+											<a ng-click="changeKey(item, 'openSK2')"
+												>{{ item ? item : "Empty" }}</a
+											>
+										</li>
+									</ul>
+								</div>
+
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-open-key"
+									>
+										{{ setting.openKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-open-key"
+									>
+										<li role="menuitem" ng-repeat="item in allLetters">
+											<a ng-click="changeKey(item, 'openKey')">{{ item }}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2">Open the lookup history: </span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-option-sk1"
+									>
+										{{ setting.openOptionSK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-option-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'openOptionSK1')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-option-sk2"
+									>
+										{{ setting.openOptionSK2 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-option-sk2"
+									>
+										<li role="menuitem" ng-repeat="item in allSK">
+											<a ng-click="changeKey(item, 'openOptionSK2')"
+												>{{ item ? item : "Empty" }}</a
+											>
+										</li>
+									</ul>
+								</div>
+
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-open-option-key"
+									>
+										{{ setting.openOptionKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-open-option-key"
+									>
+										<li role="menuitem" ng-repeat="item in allLetters">
+											<a ng-click="changeKey(item, 'openOptionKey')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2"
+										>Look up in previous dictionary:
+									</span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-prev-dict-sk1"
+									>
+										{{ setting.prevDictSK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-prev-dict-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'prevDictSK1')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-prev-dict-key"
+									>
+										{{ setting.prevDictKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-prev-dict-key"
+									>
+										<li role="menuitem" ng-repeat="item in allKeys">
+											<a ng-click="changeKey(item, 'prevDictKey')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2"
+										>look up in next dictionary:
+									</span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-next-dict-sk1"
+									>
+										{{ setting.nextDictSK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-next-dict-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'nextDictSK1')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-next-dict-key"
+									>
+										{{ setting.nextDictKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-next-dict-key"
+									>
+										<li role="menuitem" ng-repeat="item in allKeys">
+											<a ng-click="changeKey(item, 'nextDictKey')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2"
+										>Look up previous history word:
+									</span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-prev-history-sk1"
+									>
+										{{ setting.prevHistorySK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-prev-history-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'prevHistorySK1')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-prev-history-key"
+									>
+										{{ setting.prevHistoryKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-prev-history-key"
+									>
+										<li role="menuitem" ng-repeat="item in allKeys">
+											<a ng-click="changeKey(item, 'prevHistoryKey')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<span style="line-height: 2"
+										>Look up next history word:
+									</span>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-next-history-sk1"
+									>
+										{{ setting.nextHistorySK1 }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-next-history-sk1"
+									>
+										<li
+											role="menuitem"
+											ng-repeat="item in allSK"
+											ng-hide="!item"
+										>
+											<a ng-click="changeKey(item, 'nextHistorySK1')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+								<div class="btn-group" uib-dropdown uib-keyboard-nav>
+									<button
+										uib-dropdown-toggle
+										class="form-control btn dropdown-toggle btn-default"
+										type="button"
+										id="btn-next-history-key"
+									>
+										{{ setting.nextHistoryKey }}
+										<span class="caret"></span>
+									</button>
+
+									<ul
+										uib-dropdown-menu
+										class="dropdown-menu"
+										role="menu"
+										aria-labelledby="btn-next-history-key"
+									>
+										<li role="menuitem" ng-repeat="item in allKeys">
+											<a ng-click="changeKey(item, 'nextHistoryKey')"
+												>{{ item }}</a
+											>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<a href="https://www.buymeacoffee.com/riveryoung" class="buymeacoffee" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"></a>
+		</div>
+		<div
+			id="confirm-delete-modal"
+			class="modal fade"
+			tabindex="-1"
+			role="dialog"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button
+							type="button"
+							class="close"
+							data-dismiss="modal"
+							aria-label="Close"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">Caution</h4>
+					</div>
+					<div class="modal-body">
+						<p></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							Cancel
+						</button>
+						<button
+							type="button"
+							class="btn btn-danger button-confirm"
+							data-dismiss="modal"
+						>
+							Confirm
+						</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+	</body>
+</html>

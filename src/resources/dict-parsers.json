@@ -1,0 +1,329 @@
+{
+  "bing": {
+    "url": "https://cn.bing.com/dict/search?mkt=zh-cn&q=<word>",
+    "supportChinese": true,
+    "result": {
+      "w": {
+        "selector": ".hd_area #headword"
+      },
+      "prons": [
+        {
+          "symbol": {
+            "selector": ".hd_area .hd_prUS"
+          },
+          "audio": {
+            "selector": ".hd_area .hd_prUS + .hd_tf",
+            "htmlRegex": "https:.*?\\.mp3"
+          },
+          "type": "ame"
+        },
+        {
+          "symbol": {
+            "selector": ".hd_area .hd_pr"
+          },
+          "audio": {
+            "selector": ".hd_area .hd_pr + .hd_tf",
+            "htmlRegex": "https:.*?\\.mp3"
+          },
+          "type": "bre"
+        },
+        {
+          "symbol": {
+            "selector": ".hd_area .hd_p1_1"
+          },
+          "type": "pinyin"
+        }
+      ],
+      "defs": {
+        "groups": "#homoid tr.def_row",
+        "result": {
+          "pos": {
+            "selector": ".pos"
+          },
+          "def": {
+            "selector": ".def_fl>.de_li1",
+            "toArray": true
+          }
+        }
+      },
+      "defs2": {
+        "groups": ".qdef ul>li",
+        "result": {
+          "pos": {
+            "selector": ".pos"
+          },
+          "def": {
+            "selector": ".def"
+          }
+        }
+      }
+    }
+  },
+  "naver": {
+    "url": "https://ko.dict.naver.com/api3/koko/search?query=<word>&m=pc&range=all&lang=ko"
+  },
+  "google": {
+    "url": "https://www.google.com/search?hl=en-US&q=define+<word>",
+    "languages": ["German", "Spanish", "French", "Italian"],
+    "result": {
+      "w": {
+        "selector": "[data-dobid='hdw']"
+      },
+      "langSymbol": {
+        "selector": "[data-language]",
+        "attr": "data-language"
+      },
+      "prons": [
+        {
+          "symbol": {
+            "selector": ".vmod[data-topic][data-hveid]",
+            "htmlRegex": "/<span>[^<>]*</span>/"
+          },
+          "type": "unknow"
+        }
+      ],
+      "defs": {
+        "groups": ".vmod>.vmod[data-topic]",
+        "result": {
+          "pos": {
+            "selector": "i"
+          },
+          "def": {
+            "selector": "[data-dobid='dfn']",
+            "toArray": true,
+            "includeArrayIndex": true
+          }
+        }
+      },
+
+      "defs2": {
+        "groups": "[data-tae]>[data-mh='-1']",
+        "result": {
+          "pos": {
+            "selector": "div"
+          },
+          "def": {
+            "selector": "ol>li",
+            "max": 2,
+            "toArray": true
+          }
+        }
+      },
+      "images": {
+        "groups": ".vmod [data-topic] g-img",
+        "result": {
+          "src": {
+            "selector": "img",
+            "attr": "title"
+          }
+        }
+      }
+    }
+  },
+  "wiktionary": {
+    "url": "https://en.wiktionary.org/wiki/<word>",
+    "languages": [
+      "German",
+      "Spanish",
+      "French",
+      "Italian",
+      "Portuguese",
+      "Swedish",
+      "Finnish",
+      "Norwegian",
+      "Danish",
+      "Polish",
+      "Russian",
+      "Tajik",
+      "Vietnamese",
+      "Indonesian"
+    ],
+    "result": {
+      "w": {
+        "selector": "h1#firstHeading"
+      },
+      "langTargets": {
+        "groups": ".mw-parser-output h2:has('.mw-headline')",
+        "extendNextTo": "h2",
+        "result": {
+          "lang": {
+            "selector": "span.mw-headline",
+            "parents": "h2"
+          },
+          "prons": [
+            {
+              "symbol": {
+                "selector": "li .IPA"
+              },
+              "type": "unknow"
+            }
+          ],
+          "defs": {
+            "groups": "p~ol",
+            "extendPrev": "h3,h4",
+            "result": {
+              "pos": {
+                "selector1": "h4 span.mw-headline",
+                "selector": "h3 span.mw-headline"
+              },
+              "def": {
+                "selector": "ol>li",
+                "excludeChild": "div,ul,dl",
+                "toArray": true,
+                "includeArrayIndex": true
+              },
+              "followWord": {
+                "selector": "ol>li .mention a[href]"
+              },
+              "optionalFollowWord": {
+                "selector": "ol>li a[href]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "ldoce": {
+    "url": "https://www.ldoceonline.com/dictionary/<word>",
+    "result": {
+      "prons": [
+        {
+          "audio": {
+            "selector": ".ldoceEntry .Head .amefile",
+            "attr": "data-src-mp3"
+          },
+          "type": "ame"
+        },
+        {
+          "audio": {
+            "selector": ".ldoceEntry .Head .brefile",
+            "attr": "data-src-mp3"
+          },
+          "type": "bre"
+        }
+      ]
+    }
+  },
+  "japan": {
+    "url": "https://www.japandict.com/<word>",
+    "languages": ["Japanese"],
+    "credentials": "same-origin",
+    "result": {
+      "w": {
+        "selector": "h1.display-1"
+      },
+      "prons": [
+        {
+          "symbol": {
+            "selector": ".d-inline-block span.small"
+          },
+          "synthesis": "ja-JP"
+        }
+      ],
+      "labels": {
+        "container": ".tab-pane[id^='eng']",
+        "groups": "ul>li.list-group-item span.label",
+        "result": {
+          "name": {}
+        }
+      },
+      "defs": {
+        "container": ".tab-pane[id^='eng']",
+        "groups": "ul>li.list-group-item",
+        "result": {
+          "def": {
+            "selector": "div[lang='en']"
+          }
+        }
+      }
+    }
+  },
+  "Tajik": {
+    "url": "https://vazhaju.com/search/<word>",
+    "languages": ["Tajik"],
+    "result": {
+      "w": {
+        "selector": ".word .word-spelling>span"
+      },
+      "prons": [
+        {
+          "symbol": {
+            "selector": ".word .word-spelling [dir='rtl']"
+          }
+        }
+      ],
+      "defs": {
+        "container": ".panel>.panel-body>.word",
+        "groups": ".part-of-speech",
+        "result": {
+          "pos": {
+            "selector": "span.part-of-speech-name"
+          },
+          "def": {
+            "singleParents": ".part-of-speech-content",
+            "selector": ".part-of-speech-content .definition>span",
+            "toArray": true,
+            "includeArrayIndex": true
+          }
+        }
+      }
+    }
+  },
+  "Thai": {
+    "url": "https://en.bab.la/dictionary/thai-english/<word>",
+    "languages": ["Thai"],
+    "result": {
+      "w": {
+        "selector": ".quick-result-entry a.babQuickResult"
+      },
+      "prons": [
+        {
+          "synthesis": "th-TH"
+        }
+      ],
+      "defs": {
+        "container": ".quick-results",
+        "groups": ".quick-result-entry:has('.quick-result-overview')",
+        "filterRelatedWord": "a.babQuickResult",
+        "result": {
+          "pos": {
+            "selector": "span.suffix",
+            "strFilter": "[{}]"
+          },
+          "def": {
+            "selector": ".quick-result-overview ul.sense-group-results>li",
+            "toArray": true,
+            "includeArrayIndex": true
+          }
+        }
+      }
+    }
+  },
+  "Indonesian": {
+    "url": "https://www.kamus.net/indonesia/<word>",
+    "languages": ["Indonesian"],
+    "result": {
+      "w": {
+        "selector": "#featured-term #featured-term-int"
+      },
+      "prons": [
+        {
+          "synthesis": "id-ID"
+        }
+      ],
+      "defs": {
+        "container": "#featured-term-trans",
+        "groups": ".trans-target",
+        "result": {
+          "def": {
+            "selector": "p",
+            "toArray": true,
+            "excludeChild": ".pron",
+            "includeArrayIndex": true
+          }
+        }
+      }
+    }
+  }
+}
